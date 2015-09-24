@@ -38,22 +38,28 @@ print low_wage_percent
 # All majors, common to both DataFrames
 majors = recent_grads['Major'].value_counts().index
 
-recent_grads_lower_emp_count = 0
-all_ages_lower_emp_count = 0
+recent_grads_lower_emp=[]
+all_ages_lower_emp=[]
 
 for major in majors:
-    recent_rate = recent_grads[recent_grads["Major"]==major]["Unemployment_rate"].values[0]
-    all_time_rate = all_ages[all_ages["Major"]==major]["Unemployment_rate"].values[0]
-    diff = recent_rate - all_time_rate #comparator
+    recent_unemply_rate = recent_grads[recent_grads["Major"]==major]["Unemployment_rate"].values[0]
+    all_time_unemply_rate = all_ages[all_ages["Major"]==major]["Unemployment_rate"].values[0]
+    diff = recent_unemply_rate - all_time_unemply_rate #comparator
     
     if diff < 0:
-        recent_grads_lower_emp_count +=  1
+        recent_grads_lower_emp.append(major)
     elif diff >0:
-        all_ages_lower_emp_count += 1
+        all_ages_lower_emp.append(major)
     else:
         pass #equal
-        
+
+recent_grads_lower_emp_count = len(recent_grads_lower_emp)
+all_ages_lower_emp_count = len(all_ages_lower_emp)
+
 print recent_grads_lower_emp_count
 print all_ages_lower_emp_count
+
+print recent_grads_lower_emp
+print all_ages_lower_emp
         
 
