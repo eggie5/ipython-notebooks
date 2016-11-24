@@ -4,20 +4,11 @@ from sklearn import preprocessing
 
 class GradientDescent(object):
   """GradientDescent"""
-  def __init__(self, arg):
+  def __init__(self):
     super(GradientDescent, self).__init__()
-    self.arg = arg
     self.W = np.array([]) #matrix of weights
     self.b = 0 #bias
     self.classes = []
-    
-  def fit(self, X, Y):
-    #TODO Implement custom GD routine
-    #hacking sickit to fill in GD routine until I write my own
-    clf = SGDClassifier(loss="log", penalty="l2")
-    clf.fit(X, Y)
-    self.W = clf.coef_ 
-    return self
   
   def logit(self, X):
     scores = X.dot(self.W.T) + self.B
@@ -47,7 +38,7 @@ class GradientDescent(object):
 
     return loss#np.average(loss)
     
-  def fit2(self, X, Y):
+  def fit(self, X, Y):
     nb_epochs = 200
     params = []
     learning_rate = .1
@@ -68,17 +59,16 @@ class GradientDescent(object):
       loss = self.loss_function(X, Y) # function of W
       error = np.average(loss.sum(axis=1))
       
-      if i % 10 == 0:
-        print "iteration %d: loss %f" % (i, error)
+      # if i % 10 == 0:
+      #   print "iteration %d: loss %f" % (i, error)
 
-
-      class_probs = self.predict_proba(self.X)
-      d_y = L - class_probs
-      gradient=np.dot(self.X.T, d_y) 
+      gradient = (L - self.predict_proba(self.X)).T.dot(self.X)
       
-      vector = gradient.T
+      vector = gradient
 
       self.W += learning_rate * vector
+      
+      #TODO add stopping conditoin
       
     
     return self
@@ -90,36 +80,37 @@ class GradientDescent(object):
     indices = scores.argmax(axis=1)
     return self.classes[indices]
   
+  def score(self, X_test, Y_test):
+    preds =  self.predict(X_test)
+    score = np.average(preds == Y_test)
+    return score
+    
+  def get_params(self, deep=True):
+    return {}
+    
+  
     
 
 import numpy as np
+from sklearn.model_selection import cross_val_score
 from sklearn import datasets
 iris = datasets.load_iris()
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 X_train, X_test, Y_train, Y_test = train_test_split(iris.data, iris.target, test_size=0.33, random_state=4)
 
 
 print "MINE:"
-gd=GradientDescent("")
-gd.fit2(X_train, Y_train)
-print gd.W
-print gd.B
-print "Predictions:"
-preds =  gd.predict(X_test)
-print preds
-score = np.average(preds == Y_test)
-print score
+gd=GradientDescent()
+gd.fit(X_train, Y_train)
+scores = cross_val_score(gd, iris.data, iris.target, cv=10)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 
 print "\nSCIKIT: "
 clf = SGDClassifier(loss="log", penalty="l2")
 clf.fit(X_train, Y_train)
-print clf.coef_
-print "Predictions:"
-preds =  clf.predict(X_test)
-print preds
-score = np.average(preds == Y_test)
-print score
+scores = cross_val_score(clf, iris.data, iris.target, cv=10)
+print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 
 

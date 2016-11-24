@@ -66,7 +66,7 @@ Give each target a one-hot encoding so we can compare the outputs of the softmax
 We use the cross entropy calculation given below to map our probabilities to a classification target. For example, if we have probabilities [.2, .7, 1], then we would take a cross entropy calculation on the given probability and every target then choose the target w/ the highest entropy, e.g: [0, 1, 0]
 
 $$
-D(S,L) = -\Sigma_j L_i log(S_i)
+D(S,L) = -\Sigma_j L_i\cdot log(S_i)
 $$
 
 
