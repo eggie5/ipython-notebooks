@@ -11,22 +11,57 @@ $$
 \frac{df(w)}{dw} = \frac{f(w+ h) - f(w - h)}{2h} \hspace{0.1in} \text{(use instead)}
 $$
 
+## Gradient
 
-In python:
+### Logit Score
 
-```python
-def evaluate_gradient(loss_function, data, params):
-    w=params
-    error = loss_function # Nx1
-    gradient = np.dot(data.T, error) / N #  4xN- Nx1
-    return gradient #4x1
-        
-data = #the whole training set
-params = np.zeros(data.shape[1])
-for i in range(nb_epochs):
-  params_grad = evaluate_gradient(loss_function, data, params)
-  params -= learning_rate * params_grad
-```
+$$
+X\cdot W + b
+$$
+
+### Softmax (sigmoid)
+
+$$
+S(x) = p_x = \frac{e^{x}}{ \sum_j e^{x} }
+$$
+
+### Cross Entropy
+
+$$
+D(x) = L \cdot -log(p_x)
+$$
+
+*where L is the target vector as one-hot encoding.*
+
+### Cross-entropy Log-Loss Cost Function
+
+$$
+L_i =D(p_x,L)
+$$
+
+### Minimize Cost Function
+
+#### Gradient Calculation
+
+
+$$
+\nabla_w(L_w) = \frac{\partial L_i }{ \partial w_k } = p_k - \mathbb{1}(y_i = k)
+$$
+*The gradient is very simple: the original class  where the kth element is reduced by 1.*
+
+Back Propagate 
+$$
+\partial_W = X^T \cdot \nabla_w
+$$
+
+
+Update
+$$
+w  = w - h *  \partial_W
+$$
+
+
+
 
 
 

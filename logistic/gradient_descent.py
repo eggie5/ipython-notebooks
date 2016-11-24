@@ -20,7 +20,7 @@ class GradientDescent(object):
     return self
   
   def logit(self, X):
-    scores = X.dot(self.W.T) + self.b
+    scores = X.dot(self.W.T) + self.B
     return scores#.ravel() if scores.shape[1] == 1 else scores
     
   def softmax(self, scores):
@@ -51,6 +51,7 @@ class GradientDescent(object):
     nb_epochs = 200
     params = []
     learning_rate = .1
+    thresh = .001
     
     self.X = X
     self.Y = Y
@@ -61,6 +62,7 @@ class GradientDescent(object):
     #random init weights
     self.W = 0.01 * np.random.randn(len(self.classes),X.shape[1]) #4x3
     self.B = np.zeros((1,len(self.classes)))
+    L = lb = preprocessing.LabelBinarizer().fit(self.classes).transform(self.Y)
     
     for i in range(nb_epochs):
       loss = self.loss_function(X, Y) # function of W
@@ -68,24 +70,22 @@ class GradientDescent(object):
       
       if i % 10 == 0:
         print "iteration %d: loss %f" % (i, error)
-      
-      dscores = self.predict_proba(X)
 
-      dscores[range(self.X.shape[0]),self.Y] -= 1 
-      dscores /= X.shape[0]
-      
-      gradient = np.dot(dscores.T, X) #/ X.shape[0] # 
-      db = np.sum(dscores, axis=0, keepdims=True)
 
-      self.W += -learning_rate * gradient
-      self.B += -learning_rate * db
+      class_probs = self.predict_proba(self.X)
+      d_y = L - class_probs
+      gradient=np.dot(self.X.T, d_y) 
+      
+      vector = gradient.T
+
+      self.W += learning_rate * vector
       
     
     return self
     
   def predict(self, X):
     #get logit scores
-    scores = self.logit(X) + self.B
+    scores = self.logit(X) 
     
     indices = scores.argmax(axis=1)
     return self.classes[indices]
@@ -103,6 +103,7 @@ print "MINE:"
 gd=GradientDescent("")
 gd.fit2(X_train, Y_train)
 print gd.W
+print gd.B
 print "Predictions:"
 preds =  gd.predict(X_test)
 print preds

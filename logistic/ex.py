@@ -1,3 +1,4 @@
+# http://cs231n.github.io/neural-networks-case-study/
 import numpy as np
 import numpy as np
 from sklearn import datasets
@@ -36,7 +37,7 @@ for i in xrange(epochs):
   # compute the loss: average cross-entropy loss and regularization
   correct_probs = probs[range(num_examples),y]
   correct_logprobs = -np.log(correct_probs)
-  data_loss = np.sum(correct_logprobs)/num_examples
+  data_loss = np.average(correct_logprobs)
   
   loss = data_loss 
   if i % 10 == 0:
@@ -45,11 +46,11 @@ for i in xrange(epochs):
   # compute the gradient on scores
   dscores = probs
   dscores[range(num_examples),y] -= 1 # for each true prob subtract 1
-  dscores /= num_examples
+  # dscores /= num_examples
   # print dscores
   
   # backpropate the gradient to the parameters (W,b)
-  dW = np.dot(X.T, dscores)
+  dW = np.dot(X.T, dscores) # 4xN,Nx3 -> 4x3 weights
   db = np.sum(dscores, axis=0, keepdims=True)
 
   # perform a parameter update
