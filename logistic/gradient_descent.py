@@ -39,10 +39,11 @@ class GradientDescent(object):
     return loss#np.average(loss)
     
   def fit(self, X, Y):
-    nb_epochs = 200
+    nb_epochs = 500
     params = []
     learning_rate = .1
     thresh = .001
+    epsilon = .2 #stop if error is below this
     
     self.X = X
     self.Y = Y
@@ -61,6 +62,10 @@ class GradientDescent(object):
       
       # if i % 10 == 0:
       #   print "iteration %d: loss %f" % (i, error)
+      #terminate if error is below theshold -- should also check error delta theshold
+      if error <= epsilon:
+        print "Terminating @ iteration %d: loss %f" % (i, error)
+        return
 
       gradient = (L - self.predict_proba(self.X)).T.dot(self.X)
       
@@ -68,7 +73,7 @@ class GradientDescent(object):
 
       self.W += learning_rate * vector
       
-      #TODO add stopping conditoin
+
       
     
     return self
