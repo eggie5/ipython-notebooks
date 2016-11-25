@@ -12,7 +12,7 @@ $$
 
 We need a metric to measure the error of our predictions, we can call this our error function: E. Our task now is to minimize our error function, meaning at what values is the error the lowest. If we have a continus function, we can find the the minimum by evaluating the derivative at 0. The derivative at 0 is where they function has a local minimum. For our multi dimensional example, we need to compute the partial derivative at 0. However, this discrete world and not a continuous world, so we have to take the derivative numerically/computationally. A common computational method for evaluating a derivative at 0 is called: Gradient Descent.
 
-IS it possible to build an error function on a classifier class result? How can I measure error? what's the error of expected 'Setosa' vs actual 'versacolor' I think this is why in order to get an error function I have to do the the softmax to get probabilities of each class and then take teh distance (cross entropy) to the 1 hot encoded classes.
+IS it possible to build an error function on a classifier class result? How can I measure error? what's the error of expected 'Setosa' vs actual 'versacolor' I think this is why in order to get an error function I have to do the the softmax to get probabilities of each class and then take the distance (cross entropy) to the 1 hot encoded classes.
 
 In a regression you can just take the diff of the actual vs the expected number value. that's my metric. Here my metric is log loss or the cross entropy. If I minimize that, i'll have my weights.
 
@@ -79,7 +79,7 @@ $$
 D(S(WX+b), L)
 $$
 
-Let's formalize it into a loss function. What values of W and b can we choose to mines D?
+Let's formalize it into a loss function. What values of W and b can we choose to minimize D?
 
 $$
 L = 1/N *  \Sigma_i D(S(WX_i+b), L_i)
